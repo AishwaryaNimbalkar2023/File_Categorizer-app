@@ -25,16 +25,22 @@ items = os.listdir(st.session_state.current_directory)
 subdirectories = [item for item in items if os.path.isdir(os.path.join(st.session_state.current_directory, item))]
 files = [item for item in items if os.path.isfile(os.path.join(st.session_state.current_directory, item))]
 
-# Show subdirectories
+# Show subdirectories in rows of 4
 st.write("#### Subdirectories")
-for subdir in subdirectories:
-    if st.button(f"Open {subdir}"):
-        st.session_state.current_directory = os.path.join(st.session_state.current_directory, subdir)
+subdir_columns = st.columns(4)  # Create 4 columns for subdirectories
+for index, subdir in enumerate(subdirectories):
+    col = subdir_columns[index % 4]  # Distribute subdirectories evenly across the columns
+    with col:
+        if st.button(f"📂 {subdir}"):
+            st.session_state.current_directory = os.path.join(st.session_state.current_directory, subdir)
 
-# Show files
+# Show files in rows of 4
 st.write("#### Files")
-for file in files:
-    st.write(file)
+file_columns = st.columns(4)  # Create 4 columns for files
+for index, file in enumerate(files):
+    col = file_columns[index % 4]  # Distribute files evenly across the columns
+    with col:
+        st.write(f"📄 {file}")
 
 # Button to organize files in the current directory
 if st.button("Organize Files in Current Directory"):
@@ -44,4 +50,3 @@ if st.button("Organize Files in Current Directory"):
         st.text_area("Details", result, height=200)
     except Exception as e:
         st.error(f"An error occurred: {str(e)}")
-
